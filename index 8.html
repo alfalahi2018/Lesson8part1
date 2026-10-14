@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Treetops Adventure Quest</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Nunito:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0B2A4A;--g:#1F8A5B;--sun:#FFB703;--coral:#E4572E;--mint:#06A77D;--soft:#F1F5FB;--line:#B8CBE0;--chip:#E6F6EC;
+--d:"Baloo 2","Trebuchet MS",system-ui,sans-serif;--b:"Nunito","Trebuchet MS",system-ui,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--b);font-weight:700;color:var(--navy);background:linear-gradient(170deg,#8FD3F4,#CFEFC9) fixed;min-height:100vh;line-height:1.45;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+.wrap{max-width:820px;margin:0 auto;padding:10px 12px 24px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:4px 2px 10px}
+.brand{font:800 1.2rem var(--d);color:#fff;text-shadow:0 2px 0 rgba(11,42,74,.45)}
+.pills{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.pill,select{background:#fff;color:var(--navy);border:0;border-radius:999px;padding:4px 12px;font:800 1rem var(--d);min-height:38px;max-width:190px}
+.pill.hot{background:var(--coral);color:#fff}
+button{font-family:inherit;cursor:pointer}
+.panel{background:#fff;border-radius:22px;padding:16px;box-shadow:0 6px 0 rgba(11,42,74,.18);margin-bottom:14px}
+h1,h2,h3{font-family:var(--d);margin:.2em 0;line-height:1.15}
+.lead{margin:.3em 0 .8em;font-size:1.05rem}.small{font-size:.9rem;opacity:.8}
+.hero{position:relative;border-radius:24px;overflow:hidden;box-shadow:0 6px 0 rgba(11,42,74,.25);margin-bottom:14px}
+.hero svg{display:block;width:100%;height:auto}
+.ht{position:absolute;inset:0 0 auto 0;padding:12px 18px;color:#fff;text-shadow:0 3px 0 rgba(11,42,74,.55)}
+.ht h1{font-size:clamp(1.6rem,6.5vw,2.8rem);margin:0}.ht p{margin:.2em 0 0;font-size:.95rem}
+.btn{background:var(--coral);color:#fff;border:0;border-radius:999px;padding:11px 22px;font:800 1.1rem var(--d);min-height:46px;box-shadow:0 4px 0 rgba(0,0,0,.2)}
+.btn.g{background:var(--soft);color:var(--navy)}
+.btn:focus-visible,.stop:focus-visible,.opt:focus-visible,.tile:focus-visible,.chip:focus-visible,input:focus-visible,.ap:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+input{font:inherit;font-weight:800;padding:12px 14px;border-radius:14px;border:3px solid var(--line);width:100%;max-width:340px}
+.bar0{height:14px;border-radius:99px;background:var(--soft);overflow:hidden;margin:6px 0 14px}.bar0 i{display:block;height:100%;background:linear-gradient(90deg,var(--sun),var(--coral));transition:width .5s}
+.tl{display:flex;gap:3px;margin:8px 0 14px}.tl div{border-radius:8px;padding:4px 2px;text-align:center;font-size:.75rem;color:#fff;background:var(--g);min-width:0;overflow:hidden}
+.stops{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:14px}
+.stop{background:var(--soft);border:3px solid var(--line);border-radius:20px;padding:12px;text-align:center;color:var(--navy);min-height:150px}
+.stop .em{font-size:2.1rem;display:block}.stop b{font:800 1.05rem var(--d);display:block}.stop .t{font-size:.8rem;color:var(--g);display:block}.stop .m{font-size:.8rem;display:block}.stop .s{display:block;letter-spacing:2px}
+.stop.done{border-color:var(--mint);background:var(--chip)}
+.lh{display:flex;gap:12px;align-items:center;margin:4px 0 10px;color:#fff;text-shadow:0 2px 0 rgba(11,42,74,.5)}.lh h2{margin:0}.lh p{margin:0;font-size:.9rem}
+.back{background:#fff;color:var(--navy);border:0;border-radius:999px;padding:8px 14px;font-weight:800;min-height:40px;text-shadow:none}
+.chip{display:inline-flex;align-items:center;padding:9px 13px;margin:4px;background:var(--chip);border:2px solid var(--g);border-radius:14px;font-weight:800;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab;box-shadow:0 3px 0 rgba(31,138,91,.35)}
+.chip.dragging{opacity:.25}.chip.selected{outline:3px solid var(--sun)}.chip.good{background:#C9F7E4;border-color:var(--mint);box-shadow:none;cursor:default}
+.chip.big{font-size:1.2rem;padding:12px 16px;text-align:center}
+.ghost{position:fixed;z-index:1000;pointer-events:none;transform:rotate(4deg) scale(1.05);box-shadow:0 10px 20px rgba(0,0,0,.3)}
+.shake{animation:sh .45s}@keyframes sh{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+.zone.over{outline:3px dashed var(--sun);background:rgba(255,183,3,.25)}
+.slot{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-height:58px;border:2px dashed var(--line);border-radius:14px;padding:4px 10px;margin:7px 0;background:var(--soft)}
+.slot .sl{flex:1;min-width:150px}
+.pool{display:flex;flex-wrap:wrap;justify-content:center;min-height:70px;border:2px dashed var(--line);border-radius:16px;padding:6px;margin-top:12px}
+.scn{position:relative;border-radius:18px;overflow:hidden;border:3px solid var(--g)}.scn svg{display:block;width:100%;height:auto}
+.pin{position:absolute;transform:translate(-50%,-50%);min-width:38px;height:38px;border-radius:19px;background:rgba(255,255,255,.92);border:3px dashed var(--coral);font:800 1rem var(--d);display:grid;place-items:center;padding:0 6px}
+.pin.ok{border:3px solid var(--mint);background:#C9F7E4;font-size:.82rem;white-space:nowrap}
+.tri{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.tri .zone{border:3px dashed var(--line);border-radius:16px;min-height:78px;display:grid;place-items:center;text-align:center;font:800 1.05rem var(--d);background:var(--soft);padding:4px}
+.tri .zone.ok{background:#C9F7E4;border-color:var(--mint)}
+.dots{display:flex;gap:6px;justify-content:center;margin-bottom:6px}.dots i{width:12px;height:12px;border-radius:50%;background:var(--line)}.dots i.on{background:var(--sun)}.dots i.ok{background:var(--mint)}
+.answer,.tiles{display:flex;flex-wrap:wrap;gap:8px;min-height:60px;padding:8px;border-radius:16px;justify-content:center}
+.answer{border:3px dashed var(--g);background:var(--soft);margin:6px 0 10px}
+.tile{background:var(--sun);color:var(--navy);border:0;border-radius:12px;min-width:44px;height:48px;font:800 1.3rem var(--d);box-shadow:0 3px 0 rgba(0,0,0,.2)}
+.answer .tile{background:var(--chip);border:2px solid var(--g)}
+#msg,#fb{margin-top:10px;font-weight:800;min-height:1.3em}
+.fb{padding:10px 14px;border-radius:14px;margin-bottom:10px}.fb.good{background:#C9F7E4}.fb.bad{background:#FFD9E0;color:#5A0B1E}
+.poster{background:linear-gradient(160deg,#E9D8FA,#D8F0DD);border:3px solid var(--g);border-radius:16px;padding:10px 14px;margin-bottom:10px}
+.poster .ph{font:800 1.4rem var(--d);color:var(--g);line-height:1}.poster ul{margin:6px 0;padding-left:20px}.poster .pf{background:#fff;border-radius:10px;padding:4px 10px;font-size:.9rem}
+.ap{padding:8px 10px;border-radius:12px;margin:0 0 6px;font-size:1.02rem;border:2px solid transparent;cursor:pointer}.ap.rd{background:var(--chip)}.ap.now{border-color:var(--sun);background:#FFF3C4}
+.qb{height:14px;background:var(--soft);border-radius:99px;overflow:hidden;margin-bottom:12px}.qb i{display:block;height:100%;width:100%;background:var(--mint)}.qb i.hot{background:var(--coral)}
+.qh{display:flex;justify-content:space-between;margin-bottom:6px}.qt{font-size:1.2rem;font-weight:800;margin:.2em 0 .7em}
+.opts{display:grid;gap:10px;margin-bottom:10px}
+.opt{background:var(--soft);color:var(--navy);border:3px solid var(--line);border-radius:16px;padding:12px 14px;text-align:left;font-weight:800;font-size:1.03rem;min-height:50px}
+.opt.good{background:#C9F7E4;border-color:var(--mint)}.opt.bad{background:#FFD9E0;border-color:var(--coral)}
+.ov{position:fixed;inset:0;background:rgba(11,42,74,.65);display:grid;place-items:center;z-index:900;padding:16px}
+.md{background:#fff;border-radius:26px;padding:22px;max-width:390px;width:100%;text-align:center;box-shadow:0 10px 0 rgba(0,0,0,.25);animation:pp .35s}@keyframes pp{from{transform:scale(.7);opacity:0}}
+.md .big{font-size:2.6rem;letter-spacing:4px}.md .row{justify-content:center}
+.fp{position:fixed;z-index:1100;pointer-events:none;transform:translateX(-50%);font:800 1.5rem var(--d);color:var(--mint);text-shadow:0 2px 0 #fff;animation:up .9s forwards}@keyframes up{to{transform:translate(-50%,-60px);opacity:0}}
+#cf{position:fixed;inset:0;pointer-events:none;z-index:1200}
+.cert{text-align:center;border:6px double var(--sun)}.cert .cn{font-size:clamp(2rem,9vw,3.2rem);color:var(--coral);margin:.1em 0}
+.foot{text-align:center;color:#fff;font-weight:800;text-shadow:0 1px 0 rgba(11,42,74,.6);padding:6px}
+@media print{body{background:#fff}.nop,.top,.foot{display:none!important}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<canvas id="cf" aria-hidden="true"></canvas>
+<div class="wrap">
+ <div class="top"><div class="brand">🌲 Treetops Adventure Quest</div>
+  <div class="pills"><select id="jump" aria-label="Go to any stage"></select><span class="pill" id="clk" title="Lesson clock">⏱ 25:00</span><span class="pill">⭐ <span id="score">0</span></span><button class="pill" id="mute" aria-label="Sound on or off">🔊</button></div></div>
+ <main id="screen"></main>
+ <div class="foot">Created by T.Badria Alfalahi</div>
+</div>
+<script>
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const S=$('#screen'),st={name:'',score:0,stars:{}};
+let sel=null,timer=null,muted=false,ac=null,clock=null,secs=1500,spk=0;
+const calm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function tone(f,d=.12,t='sine',w=0,v=.07){if(muted)return;try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain();o.type=t;o.frequency.value=f;g.gain.value=v;o.connect(g);g.connect(ac.destination);const x=ac.currentTime+w;o.start(x);g.gain.exponentialRampToValueAtTime(.0001,x+d);o.stop(x+d+.03)}catch(e){}}
+const sfx={ok(){tone(660,.1,'triangle');tone(880,.15,'triangle',.09)},no(){tone(170,.25,'sawtooth',0,.05)},tick(){tone(900,.04,'square',0,.025)},win(){[523,659,784,1047].forEach((f,i)=>tone(f,.2,'triangle',i*.11))}};
+function speak(t,cb){const id=++spk;let done=false;const end=()=>{if(!done&&id===spk){done=true;if(cb)cb()}};
+ if(muted||!window.speechSynthesis){if(cb)setTimeout(end,1200+t.length*45);return}
+ try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='en-GB';u.rate=.9;u.onend=end;u.onerror=end;speechSynthesis.speak(u);if(cb)setTimeout(end,3000+t.length*110)}catch(e){if(cb)setTimeout(end,1200)}}
+const hush=()=>{spk++;try{speechSynthesis.cancel()}catch(e){}};
+$('#mute').onclick=()=>{muted=!muted;$('#mute').textContent=muted?'🔇':'🔊';if(muted)hush()};
+const upd=()=>$('#score').textContent=st.score;
+function pop(t,el){if(!el)return;const r=el.getBoundingClientRect(),d=document.createElement('div');d.className='fp';d.textContent=t;d.style.left=r.left+r.width/2+'px';d.style.top=r.top+'px';document.body.appendChild(d);setTimeout(()=>d.remove(),950)}
+function confetti(){if(calm)return;const c=$('#cf'),x=c.getContext('2d');c.width=innerWidth;c.height=innerHeight;const k=['#FFB703','#E4572E','#06D6A0','#118AB2','#fff'];const P=Array.from({length:130},()=>({x:Math.random()*c.width,y:-20-Math.random()*c.height*.4,vx:(Math.random()-.5)*4,vy:2+Math.random()*4,s:6+Math.random()*7,r:Math.random()*6,c:k[Math.random()*5|0]}));let f=0;(function l(){x.clearRect(0,0,c.width,c.height);P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.r+=.12;x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.c;x.fillRect(-p.s/2,-p.s/3,p.s,p.s*.6);x.restore()});if(++f<200)requestAnimationFrame(l);else x.clearRect(0,0,c.width,c.height)})()}
+const stopT=()=>{if(timer){clearInterval(timer);timer=null}};
+function startClock(){if(clock)return;clock=setInterval(()=>{if(secs>0)secs--;const m=Math.floor(secs/60),s=secs%60,e=$('#clk');e.textContent=`⏱ ${m}:${String(s).padStart(2,'0')}`;e.classList.toggle('hot',secs<=180)},1000)}
+function modal({e,t,x,b}){const o=document.createElement('div');o.className='ov';o.innerHTML=`<div class="md" role="dialog" aria-modal="true"><div class="big">${e}</div><h3>${t}</h3><p>${x}</p><div class="row">${b.map((q,i)=>`<button class="btn ${q.c||''}" data-i="${i}">${q.l}</button>`).join('')}</div></div>`;document.body.appendChild(o);$$('button',o).forEach(q=>q.onclick=()=>{o.remove();b[+q.dataset.i].f()});$('button',o).focus()}
+function shell(n,body){stopT();hush();sel=null;S.onclick=null;const L=LV[n-1];$('#jump').value=n;S.innerHTML=`<section><div class="lh"><button class="back" id="bk">🗺️ Map</button><div><h2>${L.e} ${L.t}</h2><p>${L.k} · ${L.m} min</p></div></div>${body}</section>`;$('#bk').onclick=hub;scrollTo(0,0)}
+function finish(n,s,x){stopT();hush();st.stars[n]=Math.max(st.stars[n]||0,s);sfx.win();confetti();
+ modal({e:'⭐'.repeat(s)+'☆'.repeat(3-s),t:s==3?'Fantastic!':s==2?'Great job!':'Good try!',x:x+' You earned a stamp!',b:[{l:'Play again',c:'g',f:()=>LV[n-1].run()},{l:'Stage map',c:'g',f:hub},...(n<LV.length?[{l:'Next stage ▶',f:()=>LV[n].run()}]:[])]})}
+function fail(n){stopT();sfx.no();modal({e:'💔',t:'Out of hearts!',x:'Read the advert again and try once more.',b:[{l:'Stage map',c:'g',f:hub},{l:'Try again',f:()=>LV[n-1].run()}]})}
+const stars3=(bad,a,b)=>bad<=a?3:bad<=b?2:1;
+
+/* drag and drop: mouse, touch, or tap a card then tap the place */
+const zoneAt=(x,y)=>document.elementsFromPoint(x,y).find(e=>e.classList&&e.classList.contains('zone'));
+function dnd(root,drop){
+ root.addEventListener('pointerdown',e=>{
+  const c=e.target.closest('.chip');if(!c||c.classList.contains('locked')||e.button>0)return;
+  const sx=e.clientX,sy=e.clientY,r=c.getBoundingClientRect();let g=null;
+  const mv=v=>{if(!g&&Math.hypot(v.clientX-sx,v.clientY-sy)>6){g=c.cloneNode(true);g.classList.add('ghost');g.style.width=r.width+'px';document.body.appendChild(g);c.classList.add('dragging')}
+   if(g){g.style.left=v.clientX-r.width/2+'px';g.style.top=v.clientY-r.height/2+'px';$$('.zone.over').forEach(z=>z.classList.remove('over'));const z=zoneAt(v.clientX,v.clientY);if(z)z.classList.add('over')}};
+  const up=v=>{removeEventListener('pointermove',mv);removeEventListener('pointerup',up);removeEventListener('pointercancel',up);$$('.zone.over').forEach(z=>z.classList.remove('over'));
+   if(g){g.remove();c.classList.remove('dragging');const z=zoneAt(v.clientX,v.clientY);if(z&&root.contains(z))drop(c,z)}
+   else if(sel===c){c.classList.remove('selected');sel=null}else{$$('.chip.selected').forEach(q=>q.classList.remove('selected'));c.classList.add('selected');sel=c}};
+  addEventListener('pointermove',mv);addEventListener('pointerup',up);addEventListener('pointercancel',up)});
+ root.addEventListener('click',e=>{const z=e.target.closest('.zone');if(z&&sel&&!e.target.closest('.chip')){const c=sel;sel=null;c.classList.remove('selected');drop(c,z)}})}
+
+/* ---- reusable: timed quiz with hearts ---- */
+function quiz(n,o){
+ let i=0,right=0,hp=o.lives;
+ shell(n,`<div class="panel">${o.banner||''}<div class="qh"><span id="qn"></span><span id="hp"></span></div><div class="qb"><i id="bar"></i></div><div id="qx"></div></div>`);
+ const hearts=()=>$('#hp').textContent='❤️'.repeat(hp)+'🖤'.repeat(o.lives-hp);
+ function show(){const q=o.qs[i];$('#qn').textContent=`Question ${i+1} of ${o.qs.length}`;hearts();
+  $('#qx').innerHTML=`<p class="qt">${q.q}</p><div class="opts">${shuffle(q.o).map(x=>`<button class="opt" data-o="${esc(x)}">${x}</button>`).join('')}</div><div id="fb"></div>`;
+  const tot=o.time*10;let left=tot,done=false;const bar=$('#bar');bar.style.width='100%';bar.classList.remove('hot');stopT();
+  timer=setInterval(()=>{left--;bar.style.width=Math.max(0,left/tot*100)+'%';if(left<=tot*.3){bar.classList.add('hot');if(left%10==0)sfx.tick()}if(left<=0)ans(null,null)},100);
+  $$('.opt').forEach(b=>b.onclick=()=>ans(b.dataset.o,b));
+  function ans(v,b){if(done)return;done=true;stopT();const ok=v!==null&&v===q.a;
+   $$('.opt').forEach(x=>{x.disabled=true;if(x.dataset.o===q.a)x.classList.add('good');else if(x===b)x.classList.add('bad')});
+   if(ok){right++;const g=10+Math.round(Math.max(0,left)/tot*10);st.score+=g;sfx.ok();pop('+'+g,b)}else{sfx.no();hp--;hearts()}
+   upd();const last=i==o.qs.length-1;
+   $('#fb').innerHTML=`<div class="fb ${ok?'good':'bad'}">${ok?'🎉 Correct!':v===null?'⏰ Time is up!':'Not this time.'} ${q.x||''}</div><button class="btn" id="nx">${hp==0?'Continue':last?'Finish':'Next question'}</button>`;
+   $('#nx').focus();$('#nx').onclick=()=>{if(hp==0)return fail(n);if(last){const r=right/o.qs.length;finish(n,r>=.85?3:r>=.6?2:1,`You got ${right} out of ${o.qs.length}.${o.end||''}`)}else{i++;show()}}}}
+ show()}
+
+/* ---- reusable: put cards into slots (matching) ---- */
+function slotGame(n,o){
+ let tries=0;
+ shell(n,`<div class="panel"><p class="lead">${o.lead}</p><div id="area">${o.slots.map(s=>`<div class="slot zone" data-id="${s.id}"><span class="sl">${s.l}</span></div>`).join('')}<div class="pool zone" id="pool">${shuffle(o.chips).map(c=>`<div class="chip" data-id="${c.id}">${c.t}</div>`).join('')}</div></div><div class="row"><button class="btn" id="ck">Check ✔️</button></div><div id="msg"></div></div>`);
+ dnd($('#area'),(c,z)=>{if(c.classList.contains('locked'))return;const from=c.parentElement;
+  if(z.id==='pool'){z.appendChild(c);return}
+  const old=$('.chip',z);if(old&&old!==c){if(old.classList.contains('locked'))return;from.appendChild(old)}
+  z.appendChild(c);sfx.tick()});
+ $('#ck').onclick=()=>{tries++;let ok=0,empty=0;
+  $$('.slot').forEach(s=>{const c=$('.chip',s);if(!c){empty++;return}
+   if(c.classList.contains('locked')){ok++;return}
+   if(c.dataset.id===s.dataset.id){c.classList.add('locked','good');ok++;st.score+=15;pop('+15',c)}
+   else{c.classList.add('shake');setTimeout(()=>{c.classList.remove('shake');$('#pool').appendChild(c)},500)}});
+  upd();
+  if(ok===o.slots.length)finish(n,tries==1?3:tries<=3?2:1,o.done);
+  else{sfx.no();$('#msg').textContent=empty?`Fill every place first. ${ok} correct so far.`:`${ok} correct. The wrong cards flew back. Try again!`}}}
+
+/* ---- STAGE 1 (Starting the lesson): unscramble the word strips ---- */
+function unscr(n){
+ const W=[['ADVERT','📰','A poster or page that tells people about a place or product.'],['TICKET','🎟️','You buy it to go into a place.'],['CINEMA','🎬','You watch films here.'],['MUSEUM','🏛️','You see old and interesting things here.'],['THEATRE','🎭','You watch a play here.']];
+ let i=0,bad=0,lock=false;
+ shell(n,`<div class="panel"><p class="lead">The strips are mixed up! Tap the letters in the right order to spell each word from Unit 1.</p><div class="dots" id="dots"></div><div id="us"></div></div>`);
+ function show(){const [w,e,h]=W[i];let l;do{l=shuffle(w.split(''))}while(l.join('')===w);
+  $('#dots').innerHTML=W.map((_,k)=>`<i class="${k<i?'ok':k==i?'on':''}"></i>`).join('');
+  $('#us').innerHTML=`<div style="text-align:center"><div style="font-size:3.2rem">${e}</div><p class="small">${h}</p><div id="an" class="answer" aria-label="Your word"></div><div id="lt" class="tiles">${l.map((c,k)=>`<button class="tile" data-k="${k}">${c}</button>`).join('')}</div><div class="row" style="justify-content:center"><button class="btn g" id="cl">Clear</button></div><div id="msg"></div></div>`;
+  $('#cl').onclick=()=>{if(!lock)$$('#an .tile').forEach(t=>$('#lt').appendChild(t))}}
+ S.onclick=ev=>{const t=ev.target.closest('.tile');if(!t||lock)return;sfx.tick();
+  if(t.parentElement.id==='lt')$('#an').appendChild(t);else $('#lt').appendChild(t);
+  const w=W[i][0],got=$$('#an .tile').map(x=>x.textContent).join('');
+  if(got.length!==w.length)return;
+  if(got===w){lock=true;st.score+=15;upd();pop('+15',$('#an'));sfx.ok();speak(w.toLowerCase());$('#msg').textContent='🎉 '+w+'!';
+   setTimeout(()=>{i++;if(i<W.length){lock=false;show()}else finish(n,stars3(bad,2,5),`You unscrambled all ${W.length} words.`)},1300)}
+  else{bad++;sfx.no();lock=true;$('#an').classList.add('shake');setTimeout(()=>{lock=false;$('#an').classList.remove('shake');$$('#an .tile').forEach(x=>$('#lt').appendChild(x))},450)}};
+ show()}
+
+/* ---- scene with six numbered spots ---- */
+const SCENE=`<svg viewBox="0 0 600 380" role="img" aria-label="An adventure playground in the trees"><defs><linearGradient id="sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6EC1E4"/><stop offset="1" stop-color="#DFF5FF"/></linearGradient></defs>
+<rect width="600" height="380" fill="url(#sk)"/><circle cx="530" cy="55" r="30" fill="#FFD54A"/>
+<path d="M0 250Q150 190 300 240T600 220V380H0Z" fill="#8ED08B"/><rect y="318" width="600" height="62" fill="#5FAF5F"/>
+<g fill="#7A4B2A"><rect x="80" y="80" width="34" height="250"/><rect x="440" y="130" width="34" height="200"/><rect x="270" y="150" width="28" height="180"/></g>
+<g fill="#2E8B57"><circle cx="97" cy="70" r="58"/><circle cx="55" cy="105" r="42"/><circle cx="140" cy="105" r="42"/><circle cx="457" cy="118" r="52"/><circle cx="418" cy="150" r="38"/><circle cx="496" cy="150" r="38"/><circle cx="284" cy="140" r="42"/><circle cx="252" cy="166" r="30"/><circle cx="318" cy="166" r="30"/></g>
+<rect x="64" y="172" width="80" height="10" fill="#C68B59"/><path d="M144 176Q205 200 270 190" stroke="#8B5A2B" stroke-width="5" fill="none"/>
+<path d="M114 112L457 172" stroke="#444" stroke-width="3"/>
+<g><line x1="300" y1="142" x2="300" y2="162" stroke="#444" stroke-width="3"/><circle cx="300" cy="174" r="9" fill="#F0BE96"/><path d="M290 172a10 10 0 0 1 20 0z" fill="#1B7FC4"/><rect x="293" y="183" width="14" height="26" rx="4" fill="#E4572E"/><rect x="292" y="193" width="16" height="6" fill="#FFB703"/></g>
+<rect x="520" y="130" width="62" height="200" rx="6" fill="#C9A27A"/><g><circle cx="535" cy="160" r="6" fill="#E4572E"/><circle cx="560" cy="190" r="6" fill="#1B7FC4"/><circle cx="538" cy="225" r="6" fill="#FFB703"/><circle cx="562" cy="255" r="6" fill="#06A77D"/><circle cx="540" cy="290" r="6" fill="#E4572E"/></g>
+<rect x="130" y="305" width="100" height="46" rx="23" fill="#E4572E"/><ellipse cx="222" cy="328" rx="10" ry="18" fill="#5A1D10"/>
+<g><path d="M262 340l-8 24M358 340l8 24M310 346v22" stroke="#444" stroke-width="4"/><ellipse cx="310" cy="338" rx="58" ry="11" fill="#333"/><ellipse cx="310" cy="333" rx="52" ry="8" fill="#1B7FC4"/><circle cx="310" cy="290" r="9" fill="#F0BE96"/><rect x="303" y="299" width="14" height="24" rx="4" fill="#FFB703"/></g>
+<g><rect x="372" y="312" width="100" height="62" rx="6" fill="#2E8B57"/><path d="M382 322h80v8h-70v10h60v8h-72v10h74" stroke="#fff" stroke-width="5" fill="none"/></g>
+</svg>`;
+const WORDS=[['zip wire',35,33],['harness',50.5,52],['climbing wall',91,52],['trampoline',51.5,87],['tunnel',30,89],['maze',69,90]];
+
+/* ---- STAGE 2 (Presentation): look at the picture, label it, predict ---- */
+function labels(n){
+ let bad=0,left=WORDS.length;
+ shell(n,`<div class="panel"><p class="lead">An <b>advert</b> tells people about a place. Look at the pictures from the advert. Drag each word to the right number on the picture.</p><div id="area"><div class="scn">${SCENE}${WORDS.map((w,i)=>`<div class="pin zone" data-w="${w[0]}" style="left:${w[1]}%;top:${w[2]}%">${i+1}</div>`).join('')}</div><div class="pool">${shuffle(WORDS).map(w=>`<div class="chip" data-w="${w[0]}">${w[0]}</div>`).join('')}</div></div><div id="msg"></div><div id="pq"></div></div>`);
+ dnd($('#area'),(c,z)=>{if(!z.classList.contains('pin')||c.classList.contains('locked')||z.classList.contains('ok'))return;
+  if(c.dataset.w===z.dataset.w){z.textContent=c.dataset.w;z.classList.add('ok');c.style.display='none';st.score+=10;upd();pop('+10',z);sfx.ok();speak(c.dataset.w);left--;$('#msg').textContent='';if(!left)setTimeout(predict,900)}
+  else{bad++;sfx.no();c.classList.add('shake');setTimeout(()=>c.classList.remove('shake'),450);$('#msg').textContent='Not that one. Look at the picture again!'}});
+ function predict(){const o=['A playground high in the trees','A new cinema','A school trip to the museum'];
+  $('#pq').innerHTML=`<p class="qt" style="margin-top:12px">What do you think the advert is about?</p><div class="opts">${shuffle(o).map(x=>`<button class="opt">${x}</button>`).join('')}</div>`;
+  $('#pq').scrollIntoView({behavior:'smooth'});
+  $$('#pq .opt').forEach(b=>b.onclick=()=>{if(b.textContent===o[0]){b.classList.add('good');st.score+=15;upd();sfx.ok();setTimeout(()=>finish(n,stars3(bad,1,3),'Great prediction!'),700)}else{b.classList.add('bad');bad++;sfx.no()}})}}
+
+/* ---- STAGE 3 (Practice 1, Before you read): look quickly and answer ---- */
+function look(n){
+ quiz(n,{time:20,lives:3,banner:`<div class="poster"><div class="ph">🌲 TREETOPS<br><small>Adventure Playground</small></div><ul><li>Zip wires, trampolines and a 15-metre climbing wall</li><li>New! The Treetops Maze</li><li>Special offer: two tickets for the price of one!</li></ul><div class="pf">Tickets and information: visit our website or phone 0181 496 077.</div></div><p class="small">Look quickly at the advert. Then answer.</p>`,
+  qs:[{q:'What is the adventure playground called?',o:['Treetops Adventure Playground','Tiny-Tots Playground','Treetops Café'],a:'Treetops Adventure Playground',x:'The name is at the top of the advert.'},
+  {q:'How do you buy tickets?',o:['Visit the website or phone a number','Ask a guide in the maze','Send a letter'],a:'Visit the website or phone a number',x:'The last line of the advert tells you.'},
+  {q:'What is the special offer?',o:['Two tickets for the price of one','Free ice cream for everyone','Half price for adults'],a:'Two tickets for the price of one',x:'Look at the list on the poster.'},
+  {q:'What is new at Treetops?',o:['The Treetops Maze','The climbing wall','The café'],a:'The Treetops Maze',x:'It says New! next to the maze.'}]})}
+
+/* ---- STAGE 4 (Practice 2, Listen and read) ---- */
+function reader(n){
+ const P=['🌳 Do you love heights and enjoy a challenge? Then Treetops Adventure Playground is the place for you!','🚡 Fly along our zip wires high above the ground, and swing from rope to rope between the trees.','🧗 Climb our 15-metre wall to reach the top, then bounce on our big trampolines. How high can you jump?','⛑️ Everyone wears a helmet and a harness. Our guides will show you how to put them on, so you stay safe.','🧒 Six years old or under? The Tiny-Tots Playground has swings, slides and climbing frames just for you.','🌀 New! Try the Treetops Maze. Follow the paths, go through the tunnels and find the way out!','🍦 Hungry or thirsty? Stop at our café or picnic area. Our ice cream has been made in our own shop since 2004.','🎟️ To buy tickets and find out more, visit our website or phone 0181 496 077. Special offer: two tickets for the price of one!'];
+ const rd=new Set();let bad=0,asked=false;
+ shell(n,`<div class="panel"><p class="lead">Press <b>Listen and read</b> and follow the words. You can also tap a paragraph to hear it again. Can you find out how to learn more about the place?</p><div id="adv">${P.map((x,i)=>`<p class="ap" tabindex="0" data-i="${i}">${x}</p>`).join('')}</div><div class="row"><button class="btn" id="pl">▶ Listen and read</button><button class="btn g" id="sp">⏹ Stop</button></div><p class="small">Reading only? Tap each paragraph to mark it as read.</p><div id="mq"></div></div>`);
+ const txt=i=>P[i].replace(/^\S+\s/,'');
+ const mark=i=>{const p=$(`.ap[data-i="${i}"]`);$$('.ap').forEach(x=>x.classList.remove('now'));p.classList.add('now');rd.add(i);p.classList.add('rd');if(rd.size===P.length)mission()};
+ const say=i=>{mark(i);speak(txt(i))};
+ $$('.ap').forEach(p=>{p.onclick=()=>say(+p.dataset.i);p.onkeydown=e=>{if(e.key==='Enter')say(+p.dataset.i)}});
+ const seq=i=>{if(i>=P.length){$$('.ap').forEach(x=>x.classList.remove('now'));return}mark(i);speak(txt(i),()=>seq(i+1))};
+ $('#pl').onclick=()=>seq(0);$('#sp').onclick=()=>{hush();$$('.ap').forEach(x=>x.classList.remove('now'))};
+ function mission(){if(asked)return;asked=true;const o=['Visit the website or phone the number','Ask the zip wire','Go to the cinema'];
+  $('#mq').innerHTML=`<p class="qt" style="margin-top:12px">🔎 Mission: how can you learn more about Treetops?</p><div class="opts">${shuffle(o).map(x=>`<button class="opt">${x}</button>`).join('')}</div>`;
+  $('#mq').scrollIntoView({behavior:'smooth'});
+  $$('#mq .opt').forEach(b=>b.onclick=()=>{if(b.textContent===o[0]){b.classList.add('good');st.score+=20;upd();sfx.ok();setTimeout(()=>finish(n,stars3(bad,0,1),'You read the whole advert!'),700)}else{b.classList.add('bad');bad++;sfx.no()}})}}
+
+/* ---- STAGE 5 (Practice 3, After you read): Yes, No or Doesn't say ---- */
+function triage(n){
+ const Q=[['You can fly along a zip wire.','Y','The advert says you can fly along zip wires.'],['The climbing wall is 20 metres high.','N','It is 15 metres high.'],['A ten-year-old can play in the Tiny-Tots Playground.','N','Tiny-Tots is for children aged six or under.'],['There are tunnels in the maze.','Y','You go through the tunnels in the maze.'],['The playground is open every day.','DS','The advert does not say when it is open.'],['You can phone to find out more.','Y','Visit the website or phone the number.'],['The café sells pizza.','DS','It says you can stop for lunch or a drink, not what they sell.'],['The ice cream shop has made its own ice cream since 2004.','Y','The advert gives the year 2004.']];
+ let i=0,bad=0,lock=false;
+ shell(n,`<div class="panel"><p class="lead">Read the sentence. Drag it to <b>Yes</b>, <b>No</b> or <b>Doesn't say</b>. Think about the advert!</p><div class="dots" id="dots"></div><div id="sg"></div></div>`);
+ function show(){lock=false;$('#dots').innerHTML=Q.map((_,k)=>`<i class="${k<i?'ok':k==i?'on':''}"></i>`).join('');
+  $('#sg').innerHTML=`<div class="pool" style="min-height:90px"><div class="chip big">${Q[i][0]}</div></div><div class="tri"><div class="zone" data-k="Y">✅<br>Yes</div><div class="zone" data-k="N">❌<br>No</div><div class="zone" data-k="DS">❔<br>Doesn't say</div></div><div id="msg"></div>`}
+ dnd($('#sg'),(c,z)=>{if(!z.dataset.k||lock)return;
+  if(z.dataset.k===Q[i][1]){lock=true;z.classList.add('ok');st.score+=10;upd();pop('+10',z);sfx.ok();$('#msg').textContent='✔ '+Q[i][2];
+   setTimeout(()=>{i++;if(i<Q.length)show();else finish(n,stars3(bad,1,4),`You finished with ${bad} mistake${bad==1?'':'s'}.`)},1900)}
+  else{bad++;sfx.no();c.classList.add('shake');setTimeout(()=>c.classList.remove('shake'),450);$('#msg').textContent='Not quite. Read the sentence and look at the advert again!'}});
+ show()}
+
+/* ---- STAGE 6 (Practice 4, Work in pairs): ask and answer ---- */
+function pairs(n){
+ const Q=['Did you ride on the zip wire?','Did you climb the wall?','Did you wear a helmet?','Did you find the way out of the maze?'];
+ const A=['Yes, I did. It was fast and exciting!','Yes, I did. It was 15 metres high!','Yes, I did. A guide helped me with my harness.',"No, I didn't. I got lost in the tunnels!"];
+ slotGame(n,{lead:'Imagine you went to the adventure playground. Drag each answer to the question it matches. Notice the extra information!',slots:Q.map((q,i)=>({id:i,l:`<b>${i+1}.</b> ${q}`})),chips:A.map((t,i)=>({id:i,t})),done:'Now ask your partner these questions and add your own extra information!'})}
+
+/* ---- STAGE 7 (Finishing the lesson): three facts and a fib ---- */
+function fib(n){
+ const R=[[['The playground is called Treetops Adventure Playground.','You can phone to buy tickets.','The climbing wall is 15 metres high.'],'Children can ride the zip wire without a harness.'],
+  [['The Tiny-Tots Playground is for children aged six or under.','The maze has tunnels.','There is an ice cream shop.'],'The special offer is three tickets for the price of one.'],
+  [['Guides help you put on your harness.','You can have lunch at the café.','The advert says there is fun for all the family.'],'The Treetops Maze is an old attraction.'],
+  [['A zip wire goes high above the ground.','A trampoline is for jumping.','A harness helps to keep you safe.'],'A tunnel is a tall tower.']];
+ quiz(n,{time:25,lives:3,end:' Now tell your partner about another advert you like. What does it advertise and why do you like it?',qs:R.map(r=>({q:'Three facts and a fib! Which sentence is the fib (not true)?',o:[...r[0],r[1]],a:r[1],x:'The fib is: "'+r[1]+'"'}))})}
+
+const LV=[
+ {t:'Word Strips',k:'Starting the lesson',m:3,e:'🔤',run:()=>unscr(1)},
+ {t:'Spot the Words',k:'Presentation',m:4,e:'🔭',run:()=>labels(2)},
+ {t:'Look Quickly',k:'Practice 1: Before you read',m:3,e:'👀',run:()=>look(3)},
+ {t:'Listen and Read',k:'Practice 2: Listen and read',m:4,e:'🎧',run:()=>reader(4)},
+ {t:"Yes, No, Doesn't Say",k:'Practice 3: After you read',m:4,e:'🧠',run:()=>triage(5)},
+ {t:'Ask and Answer',k:'Practice 4: Work in pairs',m:3,e:'💬',run:()=>pairs(6)},
+ {t:'Three Facts and a Fib',k:'Finishing the lesson: Assessment',m:4,e:'🏁',run:()=>fib(7)}];
+$('#jump').innerHTML='<option value="">Go to stage...</option>'+LV.map((l,i)=>`<option value="${i+1}">${i+1}. ${l.t}</option>`).join('');
+$('#jump').onchange=e=>{if(e.target.value)LV[+e.target.value-1].run()};
+
+/* ---- screens ---- */
+function start(){stopT();hush();S.onclick=null;S.innerHTML=`<div class="hero">${SCENE}<div class="ht"><h1>Treetops Adventure Quest</h1><p>Grade 7 English. Literacy: Reading. Lesson 8, Part 1</p></div></div><section class="panel"><h2>Ready for an adventure?</h2><p class="lead">Follow the lesson step by step in <b>25 minutes</b>: warm-up, presentation, practice and a final challenge. You can also start any stage you like.</p><label for="nm" class="small">Your explorer name</label><br><input id="nm" maxlength="24" placeholder="Type your name" autocomplete="off"><div class="row"><button class="btn" id="go" style="font-size:1.3rem;padding:14px 28px">Start the lesson ▶</button></div></section>`;
+ const go=()=>{st.name=$('#nm').value.trim()||'Explorer';sfx.ok();startClock();hub()};$('#go').onclick=go;$('#nm').onkeydown=e=>{if(e.key==='Enter')go()}}
+function hub(){stopT();hush();S.onclick=null;sel=null;$('#jump').value='';const d=Object.keys(st.stars).length,N=LV.length;
+ S.innerHTML=`<section class="panel"><h2>🧭 ${esc(st.name||'Explorer')}'s Adventure Map</h2><p class="lead">Follow the stages in order, or choose any stage you like.</p><div class="bar0"><i style="width:${d/N*100}%"></i></div><div class="tl" aria-label="25 minute plan">${LV.map(l=>`<div style="flex:${l.m}">${l.m}'</div>`).join('')}</div><div class="stops">${LV.map((l,i)=>{const s=st.stars[i+1]||0;return `<button class="stop ${s?'done':''}" data-n="${i+1}"><span class="em">${l.e}</span><b>${l.t}</b><span class="t">${l.k}</span><span class="m">⏱ ${l.m} min</span><span class="s" aria-label="${s} stars">${s?'⭐'.repeat(s)+'☆'.repeat(3-s):'☆☆☆'}</span></button>`}).join('')}</div><button class="btn" id="ct" ${d<N?'disabled':''}>🎓 Get my certificate</button>${d<N?`<p class="small">Collect all ${N} stamps to unlock it (${d} of ${N}).</p>`:''}</section>`;
+ $$('.stop').forEach(b=>b.onclick=()=>LV[+b.dataset.n-1].run());$('#ct').onclick=cert}
+function cert(){const t=Object.values(st.stars).reduce((a,b)=>a+b,0),m=LV.length*3,r=t>=m-2?'Treetops Champion 🏆':t>=m*.7?'Star Climber ⭐':'Young Explorer 🧭';sfx.win();confetti();
+ S.innerHTML=`<section class="panel cert"><div style="font-size:3.4rem">🏅</div><h2>Certificate of Excellence</h2><p>Proudly awarded to</p><h1 class="cn">${esc(st.name||'Explorer')}</h1><p>for completing <b>Treetops Adventure Quest</b><br>Grade 7 English, Literacy: Reading, Lesson 8, Part 1</p><p style="font:800 1.5rem var(--d);color:var(--g)">${r}</p><p>Score: <b>${st.score}</b> points. Stars: <b>${t}</b> out of ${m}.</p><p style="font-weight:800">Created by T.Badria Alfalahi</p><div class="row nop" style="justify-content:center"><button class="btn g" id="a">Stage map</button><button class="btn" id="b">🖨️ Print</button><button class="btn g" id="c">Start again</button></div></section>`;
+ $('#a').onclick=hub;$('#b').onclick=()=>{try{print()}catch(e){}};$('#c').onclick=()=>{st.score=0;st.stars={};upd();start()}}
+start();
+</script>
+</body>
+</html>
